@@ -12,21 +12,25 @@ func Part01(r io.Reader) any {
 	lines := util.ReadLines(r)
 	res := 0
 	for _, line := range lines {
-		curr := 0
-		l := 0
-		r := 1
-		for l <= len(line)-2 {
-			joltCharge, _ := strconv.Atoi(string(line[l]) + string(line[r]))
-			if joltCharge > curr {
-				curr = joltCharge
+		n1Idx := 0
+		for i := range line {
+			if i == len(line)-1 {
+				break
 			}
-			r += 1
-			if r >= len(line) {
-				l += 1
-				r = l + 1
+			if line[i] > line[n1Idx] {
+				n1Idx = i
 			}
 		}
-		res += curr
+		n2Idx := n1Idx + 1
+		for i := n2Idx; i < len(line); i++ {
+			if line[i] > line[n2Idx] {
+				n2Idx = i
+			}
+		}
+		n1 := int(line[n1Idx] - '0')
+		n2 := int(line[n2Idx] - '0')
+		res += n1*10 + n2
+
 	}
 	return res
 }
