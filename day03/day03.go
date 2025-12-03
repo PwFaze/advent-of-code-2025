@@ -37,26 +37,34 @@ func Part01(r io.Reader) any {
 
 func Part02(r io.Reader) any {
 	lines := util.ReadLines(r)
-	orderLine := lines[0]
-	orders := strings.Split(orderLine, ",")
-	res := 0
-	for _, order := range orders {
-		o := strings.Split(order, "-")
-		start, _ := strconv.Atoi(o[0])
-		end, _ := strconv.Atoi(o[1])
-		for i := start; i <= end; i++ {
-			curr := strconv.Itoa(i)
-			l := len(curr)
-			for j := 1; j <= l/2; j++ {
-				partialCurr := curr[:j]
-				repeated := l / j
-				if s := strings.Repeat(partialCurr, repeated); s == curr {
-					res += i
-					break
-				}
+	wantedLength := 12
+	var result int64
+	for _, line := range lines {
+		stack := []rune{}
+		lineLength := len(line)
+		for i, n := range line {
+			num := n - '0'
+			for len(stack) > 0 && stack[len(stack)-1] < num && len(stack)-1+lineLength-i >= wantedLength {
+				// pop in these condition
+				// 1.when len > 0
+				// 2.current number > current top of stack
+				// 3.if poped then the length should still reach 12(wantedLength) \
+				// -> current stack length + lineLength - current number index >= wanted length
+				stack = stack[:len(stack)-1]
 			}
+			// append in this condition
+			if len(stack) < wantedLength {
+				stack = append(stack, num)
+			}
+
+		}
+		var sb strings.Builder
+		for _, n := range stack {
+			sb.WriteRune(n + '0')
 		}
 
+		num, _ := strconv.ParseInt(sb.String(), 10, 64)
+		result += num
 	}
-	return res
+	return result
 }

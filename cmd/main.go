@@ -65,6 +65,13 @@ var DAYRUNNER = []aocRunner{
 		Day:      3,
 		Part:     1,
 	},
+	{
+		TaskName: "Day 03, Part 02",
+		FileName: "day03/day03.txt",
+		Handler:  day03.Part02,
+		Day:      3,
+		Part:     2,
+	},
 }
 
 func runPart(aocRunner aocRunner) aocResult {
