@@ -9,6 +9,8 @@ import (
 
 	"github.com/PwFaze/advent-of-code-2025/day01"
 	"github.com/PwFaze/advent-of-code-2025/day02"
+	"github.com/PwFaze/advent-of-code-2025/day03"
+	"github.com/spf13/pflag"
 )
 
 type handler func(io.Reader) any
@@ -56,6 +58,13 @@ var DAYRUNNER = []aocRunner{
 		Day:      2,
 		Part:     2,
 	},
+	{
+		TaskName: "Day 03, Part 01",
+		FileName: "day03/day03.txt",
+		Handler:  day03.Part01,
+		Day:      3,
+		Part:     1,
+	},
 }
 
 func runPart(aocRunner aocRunner) aocResult {
@@ -90,23 +99,32 @@ func runPart(aocRunner aocRunner) aocResult {
 	return res
 }
 
-func runDay(day int) {
+func runDay(day int, part int) {
 	fmt.Printf("Running day %d\n", day)
 	found := false
 	for _, d := range DAYRUNNER {
-		if d.Day == day {
-			fmt.Printf("Day %d part %d\n", day, d.Part)
+		if d.Day == day && (part == 0 || d.Part == part) {
+			fmt.Printf("Day %d part %d\n", d.Day, d.Part)
 			r := runPart(d)
-			fmt.Println("Result:", r.Result)
+			fmt.Printf("Result: %v\n", r.Result)
 			fmt.Printf("Time elapsed: %s\n", r.TimeElapsed)
 			found = true
 		}
 	}
 	if !found {
-		fmt.Printf("Did not find a solution for day %d\n", day)
+		fmt.Printf("No solution found for day %d part %d\n", day, part)
 	}
 }
 
 func main() {
-	runDay(2)
+	day := pflag.IntP("day", "d", 0, "day number to run")
+	part := pflag.IntP("part", "p", 0, "part number (optional)")
+	pflag.Parse()
+
+	if *day == 0 {
+		fmt.Println("You must specify --day or -d")
+		os.Exit(1)
+	}
+
+	runDay(*day, *part)
 }

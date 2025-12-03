@@ -10,25 +10,23 @@ import (
 
 func Part01(r io.Reader) any {
 	lines := util.ReadLines(r)
-	orderLine := lines[0]
-	orders := strings.Split(orderLine, ",")
 	res := 0
-	for _, order := range orders {
-		o := strings.Split(order, "-")
-		start, _ := strconv.Atoi(o[0])
-		end, _ := strconv.Atoi(o[1])
-		for i := start; i <= end; i++ {
-			curr := strconv.Itoa(i)
-			if len(curr)%2 != 0 {
-				continue
+	for _, line := range lines {
+		curr := 0
+		l := 0
+		r := 1
+		for l <= len(line)-2 {
+			joltCharge, _ := strconv.Atoi(string(line[l]) + string(line[r]))
+			if joltCharge > curr {
+				curr = joltCharge
 			}
-
-			l := len(curr) / 2
-			if curr[:l] == curr[l:] {
-				res += i
+			r += 1
+			if r >= len(line) {
+				l += 1
+				r = l + 1
 			}
 		}
-
+		res += curr
 	}
 	return res
 }
